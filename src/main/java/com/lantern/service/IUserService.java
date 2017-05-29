@@ -2,6 +2,7 @@ package com.lantern.service;
 
 import com.lantern.common.ServerResponse;
 import com.lantern.pojo.User;
+import com.mysql.fabric.Server;
 
 import javax.servlet.http.HttpSession;
 
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpSession;
  */
 public interface IUserService {
 
+    //portal
     ServerResponse<User> login(String username, String password);
 
     ServerResponse<String> register(User user, String registerToken);
@@ -29,4 +31,11 @@ public interface IUserService {
     ServerResponse<String> resetGetVerify(String username);
 
     ServerResponse<String> resetPassword(User user, String newPassword, String resetToken);
+
+    ServerResponse<User> updateInformation(User user);
+
+    ServerResponse<User> getInformation(String username);
+
+    //backend
+    ServerResponse checkAdminRole(User user);
 }

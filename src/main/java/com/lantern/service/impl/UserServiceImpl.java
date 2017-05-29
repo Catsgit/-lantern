@@ -1,9 +1,6 @@
 package com.lantern.service.impl;
 
-import com.lantern.common.Const;
-import com.lantern.common.ServerResponse;
-import com.lantern.common.TokenCache;
-import com.lantern.common.VerifyCache;
+import com.lantern.common.*;
 import com.lantern.dao.UserMapper;
 import com.lantern.pojo.User;
 import com.lantern.service.IUserService;
@@ -17,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.util.UUID;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Created by cat on 17-5-28.
@@ -31,7 +29,7 @@ public class UserServiceImpl implements IUserService {
     public ServerResponse<User> login(String username, String password) {
         int resultCount = userMapper.checkUsername(username);
         if(resultCount == 0) {
-            return ServerResponse.createByErrorMessage("帐号未注册");
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.USER_NOT_EXIST.getCode(), ResponseCode.USER_NOT_EXIST.getDesc());
         }
         String md5Password = MD5Util.MD5EncodeUtf8(password);
         User user = userMapper.selectLogin(username, md5Password);
@@ -83,6 +81,7 @@ public class UserServiceImpl implements IUserService {
     public ServerResponse<String> getVerify(String username) {
 //        String code = VerifyUtil.sendVerify(username);
         String code = String.valueOf((int)((Math.random()*9+1)*100000));
+        System.out.println(code);
         if(code == null) {
             return ServerResponse.createByErrorMessage("验证码生成失败");
         }
@@ -104,7 +103,7 @@ public class UserServiceImpl implements IUserService {
         if(StringUtils.equals(MD5Util.MD5EncodeUtf8(verify), v)) {
             String verifyToken = UUID.randomUUID().toString();
             TokenCache.setKey(TokenCache.TOKEN_PREFIX + username, verifyToken);
-            return ServerResponse.createBySuccessMessage(verifyToken);
+            return ServerResponse.createBySuccess(verifyToken);
         }
         return ServerResponse.createByErrorMessage("验证码错误");
     }
@@ -122,7 +121,7 @@ public class UserServiceImpl implements IUserService {
     public ServerResponse<String> forgetGetVerify(String username) {
         ServerResponse validResponse = this.checkUsernameValid(username);
         if(validResponse.isSuccess()) {
-            return ServerResponse.createByErrorMessage("帐号不存在");
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.USER_NOT_EXIST.getCode(), ResponseCode.USER_NOT_EXIST.getDesc());
         }
         return getVerify(username);
     }
@@ -134,7 +133,7 @@ public class UserServiceImpl implements IUserService {
         }
         ServerResponse validResponse = this.checkUsernameValid(username);
         if(validResponse.isSuccess()) {
-            return ServerResponse.createByErrorMessage("帐号不存在");
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.USER_NOT_EXIST.getCode(), ResponseCode.USER_NOT_EXIST.getDesc());
         }
         String token = TokenCache.getKey(TokenCache.TOKEN_PREFIX + username);
         if(StringUtils.isBlank(token)) {
@@ -176,5 +175,42 @@ public class UserServiceImpl implements IUserService {
             return ServerResponse.createBySuccessMessage("密码更新成功");
         }
         return ServerResponse.createByErrorMessage("token错误, 请重新获取");
+    }
+
+    @Override
+    public ServerResponse<User> updateInformation(User user) {
+        //username是不能被改变的
+        User updateUser = new User();
+        updateUser.setUsername(user.getUsername());
+        updateUser.setNickname(user.getNickname());
+        updateUser.setEmail(user.getEmail());
+        updateUser.setPhone(user.getPhone());
+
+        int updateCount = userMapper.updateByPrimaryKeySelective(updateUser);
+        if(updateCount > 0) {
+            return ServerResponse.createBySuccess("更新个人信息成功", updateUser);
+        }
+        return ServerResponse.createByErrorMessage("更新个人信息失败");
+    }
+
+    @Override
+    public ServerResponse<User> getInformation(String username) {
+        User user = userMapper.selectByPrimaryKey(username);
+        if(user == null) {
+            return ServerResponse.createByErrorMessage("找不到当前用户");
+        }
+        user.setPassword(StringUtils.EMPTY);
+        return ServerResponse.createBySuccess(user);
+    }
+
+
+    //backend
+
+    @Override
+    public ServerResponse checkAdminRole(User user) {
+        if(user != null && user.getRole().intValue() == Const.Role.ROLE_ADMIN || user.getRole().intValue() == Const.Role.ROLE_SYSTEM_ADMIN) {
+            return ServerResponse.createBySuccess();
+        }
+        return ServerResponse.createByError();
     }
 }

@@ -5,8 +5,6 @@ import java.util.Date;
 public class Category {
     private Integer id;
 
-    private Integer parentId;
-
     private String name;
 
     private Boolean status;
@@ -17,9 +15,8 @@ public class Category {
 
     private Date updateTime;
 
-    public Category(Integer id, Integer parentId, String name, Boolean status, Integer sortOrder, Date createTime, Date updateTime) {
+    public Category(Integer id, String name, Boolean status, Integer sortOrder, Date createTime, Date updateTime) {
         this.id = id;
-        this.parentId = parentId;
         this.name = name;
         this.status = status;
         this.sortOrder = sortOrder;
@@ -37,14 +34,6 @@ public class Category {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Integer parentId) {
-        this.parentId = parentId;
     }
 
     public String getName() {
@@ -85,5 +74,20 @@ public class Category {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Category category = (Category) o;
+
+        return id != null ? id.equals(category.id) : category.id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 }

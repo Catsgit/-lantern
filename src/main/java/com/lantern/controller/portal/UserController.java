@@ -1,6 +1,7 @@
 package com.lantern.controller.portal;
 
 import com.lantern.common.Const;
+import com.lantern.common.ResponseCode;
 import com.lantern.common.ServerResponse;
 import com.lantern.pojo.User;
 import com.lantern.service.IUserService;
@@ -41,7 +42,7 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "logout.do", method = RequestMethod.GET)
+    @RequestMapping(value = "logout.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> logout(HttpSession session) {
         session.removeAttribute(Const.CURRENT_USER);
@@ -55,24 +56,25 @@ public class UserController {
     }
 
     @RequestMapping(value = "check_verify.do", method = RequestMethod.POST)
+    @ResponseBody
     public ServerResponse<String> checkVerify(String username, String verify) {
         return iUserService.checkVerify(username, verify);
     }
 
 
-    @RequestMapping(value = "register.do", method = RequestMethod.GET)
+    @RequestMapping(value = "register.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> register(User user, String registerToken) {
         return iUserService.register(user, registerToken);
     }
 
-    @RequestMapping(value = "check_username_valid.do", method = RequestMethod.GET)
+    @RequestMapping(value = "check_username_valid.do", method = RequestMethod.POST)
     @ResponseBody
     public  ServerResponse<String> checkUsernameValid(String username) {
         return iUserService.checkUsernameValid(username);
     }
 
-    @RequestMapping(value = "get_user_info.do", method = RequestMethod.GET)
+    @RequestMapping(value = "get_user_info.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<User> getUserInfo(HttpSession session) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
@@ -82,19 +84,19 @@ public class UserController {
         return ServerResponse.createByErrorMessage("用户未登录");
     }
 
-    @RequestMapping(value = "forget_get_verify.do", method = RequestMethod.GET)
+    @RequestMapping(value = "forget_get_verify.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> forgetGetVerify(String username) {
         return iUserService.forgetGetVerify(username);
     }
 
-    @RequestMapping(value = "forget_reset_password.do", method = RequestMethod.GET)
+    @RequestMapping(value = "forget_reset_password.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> forgetResetPassword(String username, String newPassword, String forgetToken) {
         return iUserService.forgetResetPassword(username, newPassword, forgetToken);
     }
 
-    @RequestMapping(value = "reset_get_verify.do", method = RequestMethod.GET)
+    @RequestMapping(value = "reset_get_verify.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> resetGetVerify(HttpSession session) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
@@ -104,7 +106,7 @@ public class UserController {
         return iUserService.resetGetVerify(user.getUsername());
     }
 
-    @RequestMapping(value = "reset_password.do", method = RequestMethod.GET)
+    @RequestMapping(value = "reset_password.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> resetPassword(HttpSession session, String newPassword, String resetToken) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
@@ -114,6 +116,28 @@ public class UserController {
         return iUserService.resetPassword(user, newPassword, resetToken);
     }
 
+    @RequestMapping(value = "update_information.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<User> updateInformation(HttpSession session, User user) {
+        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+        if(currentUser == null) {
+            return ServerResponse.createByErrorMessage("用户未登录");
+        }
+        user.setUsername(currentUser.getUsername());
+        ServerResponse<User> response = iUserService.updateInformation(user);
+        if(response.isSuccess()) {
+            session.setAttribute(Const.CURRENT_USER, response.getData());
+        }
+        return response;
+    }
 
-
+    @RequestMapping(value = "get_information.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<User> getInformation(HttpSession  session) {
+        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+        if(currentUser == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "未登录, 需要强制登录status=10");
+        }
+        return iUserService.getInformation(currentUser.getUsername());
+    }
 }

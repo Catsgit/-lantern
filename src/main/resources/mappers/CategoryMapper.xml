@@ -26,10 +26,10 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.lantern.pojo.Category">
-    insert into Category (id, parent_id, name, 
+    insert into Category (id, name,
       status, sort_order, create_time, 
       update_time)
-    values (#{id,jdbcType=INTEGER}, #{parentId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},
       #{status,jdbcType=BIT}, #{sortOrder,jdbcType=INTEGER}, now(),
       now())
   </insert>
@@ -38,9 +38,6 @@
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
-      </if>
-      <if test="parentId != null">
-        parent_id,
       </if>
       <if test="name != null">
         name,
@@ -62,9 +59,6 @@
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="parentId != null">
-        #{parentId,jdbcType=INTEGER},
-      </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
@@ -85,9 +79,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.lantern.pojo.Category">
     update Category
     <set>
-      <if test="parentId != null">
-        parent_id = #{parentId,jdbcType=INTEGER},
-      </if>
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
@@ -108,12 +99,24 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.lantern.pojo.Category">
     update Category
-    set parent_id = #{parentId,jdbcType=INTEGER},
-      name = #{name,jdbcType=VARCHAR},
+    set name = #{name,jdbcType=VARCHAR},
       status = #{status,jdbcType=BIT},
       sort_order = #{sortOrder,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectCategoryList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from Category
+  </select>
+
+  <select id="selectValidCategoryList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from Category
+    where status = true
+  </select>
 </mapper>

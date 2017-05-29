@@ -11,9 +11,9 @@
     </appender>
 
     <appender name="lantern" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>/logs/lantern.log</File>
+        <File>/home/cat/file/logs/lantern.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/logs/lantern.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <fileNamePattern>/home/cat/file/logs/lantern.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
             <append>true</append>
             <maxHistory>10</maxHistory>
         </rollingPolicy>
@@ -24,9 +24,9 @@
 
 
     <appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>/logs/error.log</File>
+        <File>/home/cat/file/logs/error.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/logs/error.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <fileNamePattern>/home/cat/file/logs/error.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
             <append>true</append>
             <maxHistory>10</maxHistory>
         </rollingPolicy>
