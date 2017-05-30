@@ -3,9 +3,12 @@ package com.lantern.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import com.lantern.common.Const;
 import com.lantern.common.ResponseCode;
 import com.lantern.common.ServerResponse;
+import com.lantern.dao.CategoryMapper;
 import com.lantern.dao.ProductMapper;
+import com.lantern.pojo.Category;
 import com.lantern.pojo.Product;
 import com.lantern.service.IProductService;
 import com.lantern.util.DateTimeUtil;
@@ -26,6 +29,9 @@ public class ProductServiceImpl implements IProductService {
 
     @Autowired
     private ProductMapper productMapper;
+
+    @Autowired
+    private CategoryMapper categoryMapper;
 
     @Override
     public ServerResponse saveOrUpdateProduct(Product product) {
@@ -149,5 +155,64 @@ public class ProductServiceImpl implements IProductService {
         PageInfo pageResult = new PageInfo(productList);
         pageResult.setList(productListVOList);
         return ServerResponse.createBySuccess(pageResult);
+    }
+
+    @Override
+    public ServerResponse<ProductDetailVO> getProductDetail(Integer productId) {
+        if(productId == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), "参数不正确, 请重新输入");
+        }
+        Product product = productMapper.selectByPrimaryKey(productId);
+        if(product == null) {
+            return ServerResponse.createByErrorMessage("产品已下架或已删除");
+        }
+        if(product.getStatus() != Const.ProductStatusEnum.ON_SALE.getCode()) {
+            return ServerResponse.createByErrorMessage("产品已下架或已删除");
+        }
+        ProductDetailVO productDetailVO = assembleProductDetailVO(product);
+        return ServerResponse.createBySuccess(productDetailVO);
+    }
+
+    @Override
+    public ServerResponse<PageInfo> getProductByKeywordCategory(String keyword, Integer categoryId, int pageNum, int pageSize, String orderBy) {
+        System.out.println("here!!!!!!!!!1");
+        if(StringUtils.isBlank(keyword) && categoryId == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), "参数不正确, 请重新输入");
+        }
+        if(categoryId != null) {
+            System.out.println("here!!!!!!!!!2");
+            Category category = categoryMapper.selectByPrimaryKey(categoryId);
+            System.out.println("here!!!!!!!!!3");
+            if(category == null && StringUtils.isBlank(keyword)) {
+                System.out.println("here!!!!!!!!!4");
+                //没有该分类, 且没有关键字
+                PageHelper.startPage(pageNum, pageSize);
+                List<ProductListVO> productListVOList = Lists.newArrayList();
+                PageInfo pageInfo = new PageInfo(productListVOList);
+                return ServerResponse.createBySuccess(pageInfo);
+            }
+        }
+        System.out.println("here!!!!!!!!!5");
+        if(StringUtils.isNotBlank(keyword)) {
+            keyword = new StringBuilder().append("%").append(keyword).append("%").toString();
+        }
+        //排序处理
+        PageHelper.startPage(pageNum, pageSize);
+        if(StringUtils.isNotBlank(orderBy)) {
+            if(Const.ProductListOrderBy.PRICE_ASC_DESC.contains(orderBy)) {
+                String[] orderByArray = orderBy.split("_");
+                PageHelper.orderBy(orderByArray[0] + " " + orderByArray[1]);
+            }
+        }
+        List<Product> productList = productMapper.selectByNameAndCategoryId(StringUtils.isBlank(keyword)?null:keyword, categoryId == null?null:categoryId);
+        List<ProductListVO> productListVOList = Lists.newArrayList();
+        for(Product productItem : productList) {
+            ProductListVO productListVO = assembleProductListVO(productItem);
+            productListVOList.add(productListVO);
+        }
+
+        PageInfo pageInfo = new PageInfo(productList);
+        pageInfo.setList(productListVOList);
+        return ServerResponse.createBySuccess(pageInfo);
     }
 }

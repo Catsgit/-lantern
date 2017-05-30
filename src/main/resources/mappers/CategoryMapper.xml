@@ -4,7 +4,6 @@
   <resultMap id="BaseResultMap" type="com.lantern.pojo.Category">
     <constructor>
       <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="parent_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="status" javaType="java.lang.Boolean" jdbcType="BIT" />
       <arg column="sort_order" javaType="java.lang.Integer" jdbcType="INTEGER" />
@@ -13,7 +12,7 @@
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    id, parent_id, name, status, sort_order, create_time, update_time
+    id, name, status, sort_order, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 

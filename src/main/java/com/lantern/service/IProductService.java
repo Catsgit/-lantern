@@ -5,6 +5,8 @@ import com.lantern.common.ServerResponse;
 import com.lantern.pojo.Product;
 import com.lantern.vo.ProductDetailVO;
 
+import java.util.List;
+
 /**
  * Created by cat on 17-5-29.
  */
@@ -19,4 +21,8 @@ public interface IProductService {
     ServerResponse<PageInfo> getProductList(int pageNum, int pageSize);
 
     ServerResponse<PageInfo> searchProduct(String productName, Integer productId, int pageNum, int pageSize);
+
+    ServerResponse<ProductDetailVO> getProductDetail(Integer productId);
+
+    ServerResponse<PageInfo> getProductByKeywordCategory(String keyword, Integer categoryId, int pageNum, int pageSize, String orderBy);
 }

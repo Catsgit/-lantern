@@ -48,7 +48,7 @@ public class UserServiceImpl implements IUserService {
         }
         ServerResponse validResponse = this.checkUsernameValid(user.getUsername());
         if(!validResponse.isSuccess()) {
-            return validResponse;
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.USER_EXIST.getCode(), ResponseCode.USER_EXIST.getDesc());
         }
         String token = TokenCache.getKey(TokenCache.TOKEN_PREFIX + user.getUsername());
         if(StringUtils.isBlank(token)) {
@@ -72,7 +72,7 @@ public class UserServiceImpl implements IUserService {
     public ServerResponse<String> registerGetVerify(String username) {
         ServerResponse validResponse = this.checkUsernameValid(username);
         if(!validResponse.isSuccess()) {
-            return validResponse;
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.USER_EXIST.getCode(), ResponseCode.USER_EXIST.getDesc());
         }
         return getVerify(username);
     }
@@ -101,9 +101,9 @@ public class UserServiceImpl implements IUserService {
             return ServerResponse.createByErrorMessage("验证码无效或过期");
         }
         if(StringUtils.equals(MD5Util.MD5EncodeUtf8(verify), v)) {
-            String verifyToken = UUID.randomUUID().toString();
-            TokenCache.setKey(TokenCache.TOKEN_PREFIX + username, verifyToken);
-            return ServerResponse.createBySuccess(verifyToken);
+            String registerToken = UUID.randomUUID().toString();
+            TokenCache.setKey(TokenCache.TOKEN_PREFIX + username, registerToken);
+            return ServerResponse.createBySuccess(registerToken);
         }
         return ServerResponse.createByErrorMessage("验证码错误");
     }

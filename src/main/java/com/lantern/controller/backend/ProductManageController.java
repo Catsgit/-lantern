@@ -40,7 +40,7 @@ public class ProductManageController {
     @Autowired
     private IFileService iFileService;
 
-    @RequestMapping("product_save.do")
+    @RequestMapping("save.do")
     @ResponseBody
     public ServerResponse productSave(HttpSession session, Product product) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
@@ -55,7 +55,7 @@ public class ProductManageController {
         }
     }
 
-    @RequestMapping("set_product_status.do")
+    @RequestMapping("set_status.do")
     @ResponseBody
     public ServerResponse setProductStatus(HttpSession session, Integer productId, Integer productStatus) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
@@ -70,7 +70,7 @@ public class ProductManageController {
         }
     }
 
-    @RequestMapping("get_detail.do")
+    @RequestMapping("detail.do")
     @ResponseBody
     public ServerResponse getDetail(HttpSession session, Integer productId) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
@@ -85,7 +85,7 @@ public class ProductManageController {
         }
     }
 
-    @RequestMapping("get_list.do")
+    @RequestMapping("list.do")
     @ResponseBody
     public ServerResponse getList(HttpSession session, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
@@ -100,7 +100,7 @@ public class ProductManageController {
         }
     }
 
-    @RequestMapping("product_search.do")
+    @RequestMapping("search.do")
     @ResponseBody
     public ServerResponse productSearch(HttpSession session, String productName, Integer productId, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);

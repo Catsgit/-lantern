@@ -49,7 +49,9 @@ public class FTPUtil {
                 ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
                 ftpClient.enterLocalPassiveMode();
                 for(File fileItem : fileList) {
+                    //将文件放进输入流中
                     fis = new FileInputStream(fileItem);
+                    //将文件从输入流输出到ftp服务器上
                     ftpClient.storeFile(fileItem.getName(), fis);
                 }
             } catch (IOException e) {

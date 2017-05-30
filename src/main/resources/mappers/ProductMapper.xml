@@ -198,4 +198,17 @@
     </where>
   </select>
 
+  <select id="selectByNameAndCategoryId" resultMap="BaseResultMap" parameterType="map">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM Product
+    WHERE status = 1
+    <if test="productName != null">
+      and name like #{productName}
+    </if>
+    <if test="categoryId != null">
+      and category_id = #{categoryId}
+    </if>
+  </select>
+
 </mapper>
