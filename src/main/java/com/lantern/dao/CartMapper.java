@@ -1,6 +1,9 @@
 package com.lantern.dao;
 
 import com.lantern.pojo.Cart;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface CartMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +17,10 @@ public interface CartMapper {
     int updateByPrimaryKeySelective(Cart record);
 
     int updateByPrimaryKey(Cart record);
+
+    Cart selectCartByUserIdProductId(@Param("userId") String userId, @Param("productId") Integer productId);
+
+    List<Cart> selectCartByUserId(String userId);
+
+    int selectCartProductCheckedStatusByUserId(String UserId);
 }
