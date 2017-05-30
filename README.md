@@ -27,9 +27,9 @@
 <h3 id='get_basic_info'> 1. get_basic_info.do </h3>
 
 
-    ```
+ ```java
     request {
-        (session)
+        HttpSession session
     }
     response {
         UserBasicVo user
@@ -40,11 +40,11 @@
         String phone,
         String email
     }
-    ```
+ ```
  
 <h3 id='update_basic_info'> 2. update_basic_info.do </h3>   
 
-    ```json
+ ```java
     request {
         (session)
         UserBasicVo user
@@ -52,12 +52,12 @@
     response {
         status
     }
-    ```
+ ```
 
     
 <h3 id='login'> 3. login.do </h3>
 
-    ```json
+ ```java
     request {
         String username,
         String password,
@@ -66,22 +66,22 @@
     response {
         status
     }
-    ```
+ ```
 
 <h3 id='register_get_verify'> 4. register_get_verify.do </h3>    
 
-    ```json
+ ```java
     request {
         String username
     }
     response {
         status
     }
-    ```
+ ```
 
 <h3 id='check_verify'> 5. check_verify.do </h3>       
 
-    ```json
+ ```java
     request {
         String username,
         String verify
@@ -90,11 +90,11 @@
         status
         token
     }
-    ```
+ ```
     
 <h3 id='register'> 6. register.do </h3>
 
-    ```json
+ ```java
     request {
         User user (String username,String password)
         String token
@@ -102,22 +102,22 @@
     response {
         status
     }
-    ```
+ ```
 
 <h3 id='forget_get_verify'> 7. forget_get_verify.do </h3>
 
-    ```json
+ ```java
     request {
         String username
     }
     response {
         status
     }
-    ```
+ ```
 
 <h3 id='forget_reset_password'> 8. forget_reset_password.do </h3>
 
-    ```json
+ ```java
     request {
         String username,
         String password,
@@ -126,11 +126,11 @@
     response {
         status
     }
-    ```
+ ```
 
 <h3 id='reset_password'> 9. reset_password.do </h3>
 
-    ```json
+ ```java
     request {
         (Session)
         String oldPassword,
@@ -139,24 +139,24 @@
     response {
         status
     }
-    ```
+ ```
     
 <h3 id='logout'> 10. logout.do </h3>
 
-    ```json
+ ```java
     request {
         (Session)
     }
     response {
         status
     }
-    ```
+ ```
 -----
 <h2 id='category'> 2. /category/ </h2>
 
 <h3 id='get_category'> 1. get_category.do </h3>
 
-    ```json
+ ```java
     request {
     }
     response {
@@ -167,14 +167,14 @@
         id: String,
         name: String
     }
-    ```
+ ```
 
 -----------
 <h2 id='product'> 3. /product/ </h2>
 
 <h3 id='get_product_list'> 1. get_product_list.do </h3>
 
-    ```json
+ ```java
     request {
         String categoryId
     }
@@ -188,11 +188,11 @@
         mainImage: String,
         price: ...
     }
-    ```
+ ```
     
 <h3 id='get_product_detail'> 2. get_product_detail.do </h3>
 
-    ```json
+ ```java
     request {
         String productId
     }
@@ -208,5 +208,5 @@
         price: ...,
         detail: ...
     }
-    ```
+ ```
     
