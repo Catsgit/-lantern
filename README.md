@@ -2,22 +2,21 @@
 -------
 ## [目录]
 * [/user/](#user)
-    * [ ] [get_basic_info.do](#get_basic_info)
-    * [ ] [update_basic.info.do](#update_basic_info)
-    * [ ] [login.do](#login)
-    * [ ] [register_get_verify.do](#register_get_verify)
-    * [ ] [check_verify.do](#check_verify)
-    * [ ] [register.do](#register)
-    * [ ] [forget_get_verify.do](#forget_get_verify)
-    * [ ] [forget_reset_password.do](#forget_reset_password)
+    * [x] [get_basic_info.do](#get_basic_info)
+    * [x] [update_basic.info.do](#update_basic_info)
+    * [x] [login.do](#login)
+    * [x] [register_get_verify.do](#register_get_verify)
+    * [x] [check_verify.do](#check_verify)
+    * [x] [register.do](#register)
+    * [x] [forget_get_verify.do](#forget_get_verify)
+    * [x] [forget_reset_password.do](#forget_reset_password)
     * [ ] [reset_password.do](#reset_password)
-    * [ ] [logout.do](#logout)
+    * [x] [logout.do](#logout)
 
 * [/category/](#category)
-    * [ ] [get.do](#get_category)
+    * [x] [get.do](#get_category)
 
 * [/product/](#product)
-    * [ ] [list.do](#get_product_list)
     * [ ] [detail.do](#get_product_detail)
     * [ ] [list.do (page)](#get_product_list_page)
 
@@ -52,7 +51,7 @@
     response {
         UserVO user
     }
-    UserVO {
+    UserBasicVO {
         String username,
         String nickname,
         String phone,
@@ -115,7 +114,7 @@
  ```java
     request {
         User user (String username,String password)
-        String token
+        String registerToken
     }
     response {
         status
@@ -138,8 +137,8 @@
  ```java
     request {
         String username,
-        String password,
-        String token
+        String newPassword,
+        String forgetToken
     }
     response {
         status
@@ -189,24 +188,6 @@
 
 -----------
 <h2 id='product'> 3. /product/ </h2>
-
-<h3 id='get_product_list'> 1. list.do </h3>
-
- ```java
-    request {
-        String categoryId
-    }
-    response {
-        <List<ProductBriefVO>> productList
-        status
-    }
-    ProductBriefVO {
-        id: String,
-        name: String,
-        mainImage: String,
-        price: ...
-    }
- ```
  
  <h3 id='get_product_list_page'> 1. list.do (page) </h3>
 
