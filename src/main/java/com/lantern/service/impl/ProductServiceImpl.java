@@ -133,4 +133,21 @@ public class ProductServiceImpl implements IProductService {
         productListVO.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix", "http://image.lantern.com/"));
         return productListVO;
     }
+
+    @Override
+    public ServerResponse<PageInfo> searchProduct(String productName, Integer productId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        if(StringUtils.isNotBlank(productName)) {
+            productName = new StringBuilder().append("%").append(productName).append("%").toString();
+        }
+        List<Product> productList = productMapper.selectByNameAndProductId(productName, productId);
+        List<ProductListVO> productListVOList = Lists.newArrayList();
+        for(Product productItem : productList) {
+            ProductListVO productListVO = assembleProductListVO(productItem);
+            productListVOList.add(productListVO);
+        }
+        PageInfo pageResult = new PageInfo(productList);
+        pageResult.setList(productListVOList);
+        return ServerResponse.createBySuccess(pageResult);
+    }
 }
