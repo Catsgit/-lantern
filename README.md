@@ -14,11 +14,29 @@
     * [ ] [logout.do](#logout)
 
 * [/category/](#category)
-    * [ ] [get_category.do](#get_category)
+    * [ ] [get.do](#get_category)
 
 * [/product/](#product)
-    * [ ] [get_product_list.do](#get_product_list)
-    * [ ] [get_product_detail.do](#get_product_detail)
+    * [ ] [list.do](#get_product_list)
+    * [ ] [detail.do](#get_product_detail)
+    * [ ] [list.do (page)](#get_product_list_page)
+
+* [/manage/category/](#manage_category)
+    * [ ] [add.do](#add_category)
+    - [ ] [set.do](#set_category_name)
+    - [ ] [get.do](#get_category_manage)
+
+- [/manage/product/](#manage_product)
+    - [ ] [save.do](#save_product)
+    - [ ] [set_status.do](#set_product_status)
+    - [ ] [detail.do](#get_product_detail_manage)
+    - [ ] [list.do](#get_product_list_manage)
+    - [ ] [search.do](#search_product_manage)
+    - [ ] [upload.do](#upload_img)
+    - [ ] [richtext_img_upload.do](#richtext_img_upload)
+
+- [/manage/user/](#manage_user)
+    - [ ] [login.do](#login_manage)
 
 ----
 
@@ -32,9 +50,9 @@
         HttpSession session
     }
     response {
-        UserBasicVo user
+        UserVO user
     }
-    UserBasicVo {
+    UserVO {
         String username,
         String nickname,
         String phone,
@@ -154,7 +172,7 @@
 -----
 <h2 id='category'> 2. /category/ </h2>
 
-<h3 id='get_category'> 1. get_category.do </h3>
+<h3 id='get_category'> 1. get.do </h3>
 
  ```java
     request {
@@ -172,7 +190,7 @@
 -----------
 <h2 id='product'> 3. /product/ </h2>
 
-<h3 id='get_product_list'> 1. get_product_list.do </h3>
+<h3 id='get_product_list'> 1. list.do </h3>
 
  ```java
     request {
@@ -189,8 +207,30 @@
         price: ...
     }
  ```
-    
-<h3 id='get_product_detail'> 2. get_product_detail.do </h3>
+ 
+ <h3 id='get_product_list_page'> 1. list.do (page) </h3>
+
+ ```java
+    request {
+        String keyword,
+        Integer categoryId,
+        int pageNum,
+        int pageSize,
+        String orderBy(price_asc, price_desc)
+    }
+    response {
+        PageInfo pageInfo,
+        status
+    }
+    ProductBriefVO {
+        id: String,
+        name: String,
+        mainImage: String,
+        price: ...
+    }
+ ```
+
+<h3 id='get_product_detail'> 2. detail.do </h3>
 
  ```java
     request {
@@ -209,4 +249,147 @@
         detail: ...
     }
  ```
+ ------------
+ <h2 id='manage_category'> /manage/category/ </h2>
+ 
+ <h3 id='add_category'> 1. add.do </h3>
+```java
+    request {
+        String categoryName
+    }
+    response {
+        status
+    }
+```
+
+ <h3 id='set_category_name'> 2. set.do </h3>
+ 
+ ```java
+    request {
+        String categoryId,
+        String categoryName
+    }
+    response {
+        status 
+    }
+```
+
+ <h3 id='get_category_manage'> 2. get.do </h3>
+ 
+ ```java
+    request {
+    }
+    response {
+        status
+        List<CategoryVO> category
+    }
+``` 
+
+ ------------
+ <h2 id='manage_product'> /manage/product/ </h2>
+ 
+ <h3 id='save_product'>  save.do </h3>
+ 
+ ```java
+    request {
+        Product product
+    }
+    response {
+        status
+    }
+```
+
+ <h3 id='set_product_status'> set_status.do </h3>
+ 
+  ```java
+    request {
+        Integer productId, 
+        Integer productStatus
+    }
+    response {
+        status
+    }
+```
+
+ <h3 id='get_product_detail_manage'> detail.do </h3>
+  
+  ```java
+    request {
+        Integer productId
+    }
+    response {
+        ProductDetailVO
+        status
+    }
+```
+
+ <h3 id='get_product_list_manage'> list.do </h3>
+   
+  ```java
+    request {
+        int pageNum, 
+        int pageSize
+    }
+    response {
+        PageInfo
+        status
+    }
+```
+
+ <h3 id='search_product_manage'> search.do </h3>
     
+  ```java
+    request {
+        String productName, 
+        Integer productId, 
+        int pageNum, 
+        int pageSize
+    }
+    response {
+        PageInfo
+        status
+    }
+```
+
+ <h3 id='upload_img'> upload.do </h3>
+     
+  ```java
+    request {
+        Multipartfile file
+    }
+    response {
+        Map(uri -> “文件名” url -> “文件路径”)
+        status
+    }
+```
+
+ <h3 id='richtext_img_upload'> richtext_img_upload.do </h3>
+     
+  ```java
+    request {
+        Multipartfile file
+    }
+    response {
+        Map -> {
+            success: false/true
+            msg:xxxx
+            file_path: url(上传成功才有)
+        }
+    }
+```
+-------
+ <h2 id='manage_user'> /manage/user/ </h2>
+ 
+ <h3 id='login_manage'>  login.do </h3>
+ 
+ ```java
+    request {
+        String username,
+        String password,
+        (session)
+    }
+    response {
+        status
+    }
+ ```
+ 
