@@ -27,7 +27,7 @@ public class CategoryManageController {
     @Autowired
     private ICategoryService iCategoryService;
 
-    @RequestMapping("add_category.do")
+    @RequestMapping("add.do")
     @ResponseBody
     public ServerResponse addCategory(HttpSession session, String categoryName) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
@@ -41,7 +41,7 @@ public class CategoryManageController {
         }
     }
 
-    @RequestMapping("set_category_name.do")
+    @RequestMapping("set.do")
     @ResponseBody
     public ServerResponse setCategoryName(HttpSession session, Integer categoryId, String categoryName) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
@@ -56,7 +56,7 @@ public class CategoryManageController {
         }
     }
 
-    @RequestMapping("get_category.do")
+    @RequestMapping("get.do")
     @ResponseBody
     public ServerResponse getCategory(HttpSession session) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);

@@ -24,7 +24,7 @@ public class CategoryController {
     private ICategoryService iCategoryService;
 
     //get_category.do 无参数 整个项目分类结点均为根节点
-    @RequestMapping("get_category.do")
+    @RequestMapping("get.do")
     @ResponseBody
     public ServerResponse getCategory(HttpSession session) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);

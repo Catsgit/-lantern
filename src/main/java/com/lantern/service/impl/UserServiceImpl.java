@@ -193,6 +193,7 @@ public class UserServiceImpl implements IUserService {
         return ServerResponse.createByErrorMessage("更新个人信息失败");
     }
 
+    /*
     @Override
     public ServerResponse<User> getInformation(String username) {
         User user = userMapper.selectByPrimaryKey(username);
@@ -202,6 +203,7 @@ public class UserServiceImpl implements IUserService {
         user.setPassword(StringUtils.EMPTY);
         return ServerResponse.createBySuccess(user);
     }
+    */
 
 
     //backend

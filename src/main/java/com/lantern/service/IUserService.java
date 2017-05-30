@@ -34,7 +34,7 @@ public interface IUserService {
 
     ServerResponse<User> updateInformation(User user);
 
-    ServerResponse<User> getInformation(String username);
+    //ServerResponse<User> getInformation(String username);
 
     //backend
     ServerResponse checkAdminRole(User user);

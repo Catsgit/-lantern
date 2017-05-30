@@ -68,15 +68,9 @@ public class UserController {
         return iUserService.register(user, registerToken);
     }
 
-    @RequestMapping(value = "check_username_valid.do", method = RequestMethod.POST)
+    @RequestMapping(value = "get_basic_info.do", method = RequestMethod.POST)
     @ResponseBody
-    public  ServerResponse<String> checkUsernameValid(String username) {
-        return iUserService.checkUsernameValid(username);
-    }
-
-    @RequestMapping(value = "get_user_info.do", method = RequestMethod.POST)
-    @ResponseBody
-    public ServerResponse<User> getUserInfo(HttpSession session) {
+    public ServerResponse<User> getBasicInfo(HttpSession session) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         if(user != null) {
             return ServerResponse.createBySuccess(user);
@@ -116,9 +110,9 @@ public class UserController {
         return iUserService.resetPassword(user, newPassword, resetToken);
     }
 
-    @RequestMapping(value = "update_information.do", method = RequestMethod.POST)
+    @RequestMapping(value = "update_basic_info.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<User> updateInformation(HttpSession session, User user) {
+    public ServerResponse<User> updateBasicInfo(HttpSession session, User user) {
         User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
         if(currentUser == null) {
             return ServerResponse.createByErrorMessage("用户未登录");
@@ -131,6 +125,7 @@ public class UserController {
         return response;
     }
 
+    /*
     @RequestMapping(value = "get_information.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<User> getInformation(HttpSession  session) {
@@ -140,4 +135,5 @@ public class UserController {
         }
         return iUserService.getInformation(currentUser.getUsername());
     }
+    */
 }
