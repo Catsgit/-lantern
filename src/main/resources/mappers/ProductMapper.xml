@@ -211,4 +211,10 @@
     </if>
   </select>
 
+  <select id="selectByProductId" resultType="int" parameterType="integer">
+    SELECT count(1)
+    FROM Product
+    WHERE id = #{productId}
+  </select>
+
 </mapper>

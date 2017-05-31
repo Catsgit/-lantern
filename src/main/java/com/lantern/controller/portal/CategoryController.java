@@ -27,11 +27,6 @@ public class CategoryController {
     @RequestMapping("get.do")
     @ResponseBody
     public ServerResponse getCategory(HttpSession session) {
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
-        if(user == null) {
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登录, 请登录");
-        }
-
         return iCategoryService.selectValidCategoryList();
     }
 }

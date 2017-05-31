@@ -1,5 +1,6 @@
 package com.lantern.service.impl;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.lantern.common.Const;
 import com.lantern.common.ResponseCode;
@@ -39,6 +40,9 @@ public class CartServiceImpl implements ICartService {
         if(productId == null || count == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), "参数不正确, 请重新输入");
         }
+        if(productMapper.selectByProductId(productId) == 0) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), "商品不存在");
+        }
 
         Cart cart = cartMapper.selectCartByUserIdProductId(userId, productId);
         if(cart == null) {
@@ -55,8 +59,56 @@ public class CartServiceImpl implements ICartService {
             cart.setQuantity(count);
             cartMapper.updateByPrimaryKeySelective(cart);
         }
+        return this.select(userId);
+    }
+
+    @Override
+    public ServerResponse<CartVO> update(String userId, Integer productId, Integer count) {
+        if(productId == null || count == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), "参数不正确, 请重新输入");
+        }
+        if(productMapper.selectByProductId(productId) == 0) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), "商品不存在");
+        }
+        Cart cart = cartMapper.selectCartByUserIdProductId(userId, productId);
+        if(cart != null) {
+            cart.setQuantity(count);
+        }
+        cartMapper.updateByPrimaryKeySelective(cart);
+        return this.select(userId);
+    }
+
+    @Override
+    public ServerResponse<CartVO> delete(String userId, String productIds) {
+        if(productIds == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), "参数不正确, 请重新输入");
+        }
+        List<String> productList = Splitter.on(",").splitToList(productIds);
+        if(productList.isEmpty()) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), "参数不正确, 请重新输入");
+        }
+        cartMapper.deleteByUserIdProductIds(userId, productList);
+        return this.select(userId);
+    }
+
+    @Override
+    public ServerResponse<CartVO> select(String userId) {
         CartVO cartVO = this.getCartVOLimit(userId);
         return ServerResponse.createBySuccess(cartVO);
+    }
+
+    @Override
+    public ServerResponse<CartVO> selectOrUnSelect(String userId, boolean checked, Integer productId) {
+        cartMapper.checkedOrUnCheckedProduct(userId, checked, productId);
+        return this.select(userId);
+    }
+
+    @Override
+    public ServerResponse<Integer> getProductCount(String userId) {
+        if(userId == null) {
+            return ServerResponse.createBySuccess(0);
+        }
+        return ServerResponse.createBySuccess(cartMapper.selectCartProductCount(userId));
     }
 
     private CartVO getCartVOLimit(String userId) {
@@ -104,6 +156,8 @@ public class CartServiceImpl implements ICartService {
                 }
 
                 if(cartItem.getChecked() == Const.Cart.CHECKED) {
+                    System.out.println(cartTotalPrice);
+                    System.out.println(cartProductVO.getProductTotalPrice());
                     cartTotalPrice = BigDecimalUtil.add(cartTotalPrice.doubleValue(), cartProductVO.getProductTotalPrice().doubleValue());
                 }
                 cartProductVOList.add(cartProductVO);
@@ -152,4 +206,5 @@ public class CartServiceImpl implements ICartService {
         }
     }
     */
+
 }

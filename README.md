@@ -21,6 +21,17 @@
     * [ ] [detail.do](#get_product_detail)
     * [ ] [list.do (page)](#get_product_list_page)
 
+* [/cart/](#cart)
+    * [ ] [add.do](#add_or_update_cart)
+    * [ ] [update.do](#update_cart_product)
+    * [ ] [delete.do](#delete_product)
+    * [ ] [list.do](#get_cart_list)
+    * [ ] [select_all.do](#all_product_checked)
+    * [ ] [un_select_all.do](#all_product_un_checked)
+    * [ ] [select.do](#one_product_checked)
+    * [ ] [un_select.do](#one_product_unchecked)
+    * [ ] [get_product_count.do](#get_product_count)
+
 * [/manage/category/](#manage_category)
     * [ ] [add.do](#add_category)
     - [ ] [set.do](#set_category_name)
@@ -187,10 +198,10 @@
     }
  ```
 
------------
-<h2 id='product'> 3. /product/ </h2>
+ -----------
+ <h2 id='product'> 3. /product/ </h2>
 
-<h3 id='get_product_list'> 1. list.do </h3>
+ <h3 id='get_product_list'> 1. list.do </h3>
 
  ```java
     request {
@@ -230,7 +241,7 @@
     }
  ```
 
-<h3 id='get_product_detail'> 2. detail.do </h3>
+ <h3 id='get_product_detail'> 2. detail.do </h3>
 
  ```java
     request {
@@ -249,18 +260,137 @@
         detail: ...
     }
  ```
+ -------
+ <h2 id='product'> 4. /cart/ </h2>
+
+ <h3 id='add'> 1. add.do </h3>
+
+ ```java
+    request {
+        Integer count,
+        Integer productId
+    }
+    response {
+        CartVO -> {
+            List<CartProductVO> cartProductVOList -> {
+                Integer id,
+                String userId,
+                Integer productId,
+                Integer quantity,
+                String productName,
+                String productSubtitle,
+                String productMainImage,
+                BigDecimal productPrice,
+                Integer productStatus,
+                BigDecimal productTotalPrice,
+                Integer productStock,
+                Boolean productChecked,
+                String limitQuantity
+            },
+            BigDecimal cartTotalPrice,
+            Boolean allChecked,
+            String imageHost
+        }
+        status
+    }
+ ```
+ <h3 id='update'> 2. update.do </h3>
+
+ ```java
+    request {
+        Integer count,
+        Integer productId
+    }
+    response {
+        CartVO,
+        status
+    }
+ ```
+ <h3 id='delete'> 3. delete.do </h3>
+
+ ```java
+    request {
+        String productIds [example: "1,2,3"](可批量删除)
+    }
+    response {
+        CartVO,
+        status
+    }
+ ```
+ <h3 id='get_cart_list'> 4. list.do </h3>
+
+ ```java
+    request {
+    }
+    response {
+        CartVO,
+        status
+    }
+ ```
+ <h3 id='select_all_product'> 5. select_all.do </h3>
+
+ ```java
+    request {
+    }
+    response {
+        CartVO,
+        status
+    }
+ ```
+ <h3 id='un_select_all_product'> 6. un_select_all.do </h3>
+
+ ```java
+    request {
+    }
+    response {
+        CartVO,
+        status
+    }
+ ```
+ <h3 id='select_one_product'> 7. select.do </h3>
+
+ ```java
+    request {
+        Integer productId
+    }
+    response {
+        CartVO,
+        status
+    }
+ ```
+ <h3 id='un_select_one_product'> 8. un_select.do </h3>
+
+ ```java
+    request {
+        Integer productId
+    }
+    response {
+        CartVO,
+        status
+    }
+ ```
+ <h3 id='get_cart_product_count'> 9. get_product_count.do </h3>
+
+ ```java
+    request {
+    }
+    response {
+        Integer,
+        status
+    }
+ ```
  ------------
  <h2 id='manage_category'> /manage/category/ </h2>
  
  <h3 id='add_category'> 1. add.do </h3>
-```java
+ ```java
     request {
         String categoryName
     }
     response {
         status
     }
-```
+ ```
 
  <h3 id='set_category_name'> 2. set.do </h3>
  
@@ -272,7 +402,7 @@
     response {
         status 
     }
-```
+ ```
 
  <h3 id='get_category_manage'> 2. get.do </h3>
  
@@ -283,8 +413,8 @@
         status
         List<CategoryVO> category
     }
-``` 
-
+ ``` 
+ 
  ------------
  <h2 id='manage_product'> /manage/product/ </h2>
  
@@ -297,7 +427,7 @@
     response {
         status
     }
-```
+ ```
 
  <h3 id='set_product_status'> set_status.do </h3>
  
@@ -309,7 +439,7 @@
     response {
         status
     }
-```
+ ```
 
  <h3 id='get_product_detail_manage'> detail.do </h3>
   
@@ -321,7 +451,7 @@
         ProductDetailVO
         status
     }
-```
+ ```
 
  <h3 id='get_product_list_manage'> list.do </h3>
    
@@ -334,7 +464,7 @@
         PageInfo
         status
     }
-```
+ ```
 
  <h3 id='search_product_manage'> search.do </h3>
     
@@ -349,7 +479,7 @@
         PageInfo
         status
     }
-```
+ ```
 
  <h3 id='upload_img'> upload.do </h3>
      
@@ -361,7 +491,7 @@
         Map(uri -> “文件名” url -> “文件路径”)
         status
     }
-```
+ ```
 
  <h3 id='richtext_img_upload'> richtext_img_upload.do </h3>
      
@@ -376,7 +506,8 @@
             file_path: url(上传成功才有)
         }
     }
-```
+ ```
+
 -------
  <h2 id='manage_user'> /manage/user/ </h2>
  
