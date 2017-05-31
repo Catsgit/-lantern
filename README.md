@@ -31,6 +31,13 @@
     * [ ] [un_select.do](#one_product_unchecked)
     * [ ] [get_product_count.do](#get_product_count)
 
+* [/shipping/](#shipping)
+    * [ ] [add.do](#add_shipping)
+    * [ ] [delete.do](#delete_shipping)
+    * [ ] [update.do](#update_shipping)
+    * [ ] [select.do](#select_one_shipping)
+    * [ ] [list.do](#list_all_shipping)
+        
 * [/manage/category/](#manage_category)
     * [ ] [add.do](#add_category)
     - [ ] [set.do](#set_category_name)
@@ -383,6 +390,76 @@
         status
     }
  ```
+ ------------
+ <h2 id='shipping'> 3. /shipping/ </h2>
+ 
+ <h3 id='add_shipping'> 1. add.do </h3>
+ 
+ ```java
+    request {
+        Shipping shipping -> {
+            String receiverName,
+            String receiverPhone,
+            String receiverProvince,
+            String receiverCity,
+            String receiverDistrict,
+            String receiverAddress,
+            String receiverZip,
+        }
+    }
+    response {
+        Map -> {
+            Integer shippingId
+        }
+    }
+ ```
+ <h3 id='delete_shipping'> 2. delete.do </h3>
+ 
+ ```java
+    request {
+        Integer shippingId
+    }
+    response {
+        status,
+        message
+    }
+    
+ ```
+ <h3 id='update_shipping'> 3. update.do </h3>
+ 
+ ```java
+    request {
+        Shipping shipping
+    }
+    response {
+        status,
+        message
+    }
+```
+ <h3 id='select_one_shipping'> 4. select.do </h3>
+ 
+ ```java
+    request {
+        Integer shippingId
+    }
+    response {
+        Shipping
+        status
+        message
+    }
+```
+ <h3 id='list_all_shipping'> 5. list.do </h3>
+ 
+ ```java
+    request {
+        int pageNum,
+        int pageSize
+    }
+    response {
+        PageInfo -> List<Shipping>
+    }
+```
+ 
  ------------
  <h2 id='manage_category'> /manage/category/ </h2>
  
