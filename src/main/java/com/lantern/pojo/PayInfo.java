@@ -9,7 +9,7 @@ public class PayInfo {
 
     private Long orderNo;
 
-    private Boolean payPlatform;
+    private Integer payPlatform;
 
     private String platformNumber;
 
@@ -19,7 +19,7 @@ public class PayInfo {
 
     private Date updateTime;
 
-    public PayInfo(Integer id, String userId, Long orderNo, Boolean payPlatform, String platformNumber, String platformStatus, Date createTime, Date updateTime) {
+    public PayInfo(Integer id, String userId, Long orderNo, Integer payPlatform, String platformNumber, String platformStatus, Date createTime, Date updateTime) {
         this.id = id;
         this.userId = userId;
         this.orderNo = orderNo;
@@ -58,11 +58,11 @@ public class PayInfo {
         this.orderNo = orderNo;
     }
 
-    public Boolean getPayPlatform() {
+    public Integer getPayPlatform() {
         return payPlatform;
     }
 
-    public void setPayPlatform(Boolean payPlatform) {
+    public void setPayPlatform(Integer payPlatform) {
         this.payPlatform = payPlatform;
     }
 

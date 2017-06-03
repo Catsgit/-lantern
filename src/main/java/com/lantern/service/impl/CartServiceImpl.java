@@ -57,6 +57,7 @@ public class CartServiceImpl implements ICartService {
             //更新产品数量
             count = cart.getQuantity() + count;
             cart.setQuantity(count);
+            cart.setChecked(true);
             cartMapper.updateByPrimaryKeySelective(cart);
         }
         return this.select(userId);

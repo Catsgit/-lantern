@@ -3,7 +3,7 @@ package com.lantern.pojo;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class Order {
+public class OrderMaster {
     private Integer id;
 
     private Long orderNo;
@@ -32,7 +32,7 @@ public class Order {
 
     private Date updateTime;
 
-    public Order(Integer id, Long orderNo, String userId, Integer shippingId, BigDecimal payment, Integer paymentType, Integer postage, Integer status, Date paymentTime, Date sendTime, Date endTime, Date closeTime, Date createTime, Date updateTime) {
+    public OrderMaster(Integer id, Long orderNo, String userId, Integer shippingId, BigDecimal payment, Integer paymentType, Integer postage, Integer status, Date paymentTime, Date sendTime, Date endTime, Date closeTime, Date createTime, Date updateTime) {
         this.id = id;
         this.orderNo = orderNo;
         this.userId = userId;
@@ -49,7 +49,7 @@ public class Order {
         this.updateTime = updateTime;
     }
 
-    public Order() {
+    public OrderMaster() {
         super();
     }
 

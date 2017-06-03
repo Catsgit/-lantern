@@ -38,6 +38,16 @@
     * [ ] [select.do](#select_one_shipping)
     * [ ] [list.do](#list_all_shipping)
         
+* [/order/](#order)
+    * [ ] [create.do](#create_order)
+    * [ ] [cancel.do](#cancel_order)
+    * [ ] [get_order_cart_product.do](#getcartproduct)
+    * [ ] [detail.do](#get_order_detail)
+    * [ ] [list.do](#get_order_list)
+    * [ ] [pay.do](#pay_order)
+    * [ ] [alipay_callback.do](#for alipay callback)
+    * [ ] [query_order_pay_status.do](#check_pay_status)
+    
 * [/manage/category/](#manage_category)
     * [ ] [add.do](#add_category)
     - [ ] [set.do](#set_category_name)
@@ -55,6 +65,11 @@
 - [/manage/user/](#manage_user)
     - [ ] [login.do](#login_manage)
 
+* [/manage/order/](#manage_order)
+    * [ ] [list.do](#get_all_order_list)
+    * [ ] [detail.do](#get_order_detail)
+    * [ ] [search.do](#seach_order_by_orderNo)
+    * [ ] [send_goods.do](#send_goods)
 ----
 
 <h2 id='user'> /user/ </h2>
@@ -459,11 +474,146 @@
         PageInfo -> List<Shipping>
     }
 ```
+
+ ------------
+ <h2 id='order'> /order/ </h2>
+ 
+ <h3 id='create_order'> 1. create.do </h3>
+ 
+ ```java
+    request {
+        Integer shippingId
+    }
+    response {
+        status,
+        OrderVO -> {
+            Long orderNo,
+            BigDecimal payment,
+            Integer paymentType,
+            String paymentTypeDesc,
+            Integer postage,
+            Integer status,
+            String statusDesc,
+            String paymentTime,
+            String sendTime,
+            String endTime,
+            String closeTime,
+            String createTime;
+            List<OrderItemVO> orderItemVOList -> {
+                Long orderNo,
+                Integer productId,
+                String productName,
+                String productImage,
+                BigDecimal currentUnitPrice,
+                Integer quantity,
+                BigDecimal totalPrice,
+                String createTime;
+            },
+            String imageHost,
+            Integer shippingId,
+            String receiverName,
+            ShippingVO shippingVO -> {
+                String receiverName,
+                String receiverPhone,
+                String receiverProvince,
+                String receiverCity,
+                String receiverDistrict,
+                String receiverAddress,
+                String receiverZip;
+            };
+        };
+    }
+```
+ <h3 id='cancel_order'> 2. cancel.do </h3>
+ 
+ ```java
+    request {
+        Long orderNo;
+    }
+    response {
+        status;
+    }
+```
+ <h3 id='get_order_cart_product'> 3. get_order_cart_product.do </h3>
+ 
+ ```java
+    request {
+    
+    }
+    response {
+        status,
+        OrderProductVO -> {
+            List<OrderItemVO> orderItemVOList,
+            BigDecimal orderTotalPrice,
+            String imageHost;
+        }
+    }
+```
+ <h3 id='get_order_detail'> 4. detail.do </h3>
+ 
+ ```java
+    request {
+        Long orderNo;
+    }
+    response {
+        status,
+        OrderVO;
+    }
+```
+ <h3 id='get_order_list'> 4. list.do </h3>
+ 
+ ```java
+    request {
+        int pageNum;
+        int pageSize;
+    }
+    response {
+        status,
+        PageInfo -> {
+            List<OrderVO> orderVOList;
+        }
+    }
+```
+ <h3 id='pay_order'> 5. pay.do </h3>
+ 
+ ```java
+    request {
+        Long orderNo;
+    }
+    response {
+        status,
+        Map<String, String> -> {
+            orderNo,
+            qrUrl; [二维码图片url];
+        };
+    }
+```
+ <h3 id='alipay_callback'> 6. alipay_callback.do </h3>
+ 
+ ```java
+    此函数由支付宝调用
+    request {
+    }
+    response {
+        Const
+    }
+```
+ <h3 id='check_pay_status'> 7. query_order_pay_status.do </h3>
+ 
+ ```java
+    request {
+        Long orderNo;
+    }
+    response {
+        status;
+    }
+```
  
  ------------
  <h2 id='manage_category'> /manage/category/ </h2>
  
  <h3 id='add_category'> 1. add.do </h3>
+ 
  ```java
     request {
         String categoryName
@@ -604,4 +754,59 @@
         status
     }
  ```
+ 
+ -------
+  <h2 id='manage_order'> /manage/order/ </h2>
+  
+  <h3 id='get_all_order_list'> 1. list.do </h3>
+  
+  ```java
+    request {
+        int pageNum,
+        int pageSize;
+    }
+    response {
+        status,
+        PageInfo -> {
+            List<OrderVO> orderVOList;
+        };
+    }
+```
+  <h3 id='get_order_detail'> 2. detail.do </h3>
+  
+  ```java
+    request {
+        Long orderNo;
+    }
+    response {
+        status,
+        OrderVO;
+    }
+```
+  <h3 id='search_order_by_orderNo'> 3. search.do </h3>
+  
+  ```java
+    request {
+        Long orderNo,
+        int pageNum,
+        int pageSize;
+    }
+    response {
+        status,
+        PageInfo -> {
+            List<OrderVO> orderVOList
+        }
+    }
+```
+  <h3 id='send_goods'> 4. send_goods.do </h3>
+  
+  ```java
+    request {
+        Long orderNo;
+    }
+    response {
+        status,
+        string;
+    }
+```
  

@@ -175,16 +175,12 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ServerResponse<PageInfo> getProductByKeywordCategory(String keyword, Integer categoryId, int pageNum, int pageSize, String orderBy) {
-        System.out.println("here!!!!!!!!!1");
         if(StringUtils.isBlank(keyword) && categoryId == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), "参数不正确, 请重新输入");
         }
         if(categoryId != null) {
-            System.out.println("here!!!!!!!!!2");
             Category category = categoryMapper.selectByPrimaryKey(categoryId);
-            System.out.println("here!!!!!!!!!3");
             if(category == null && StringUtils.isBlank(keyword)) {
-                System.out.println("here!!!!!!!!!4");
                 //没有该分类, 且没有关键字
                 PageHelper.startPage(pageNum, pageSize);
                 List<ProductListVO> productListVOList = Lists.newArrayList();
@@ -192,7 +188,6 @@ public class ProductServiceImpl implements IProductService {
                 return ServerResponse.createBySuccess(pageInfo);
             }
         }
-        System.out.println("here!!!!!!!!!5");
         if(StringUtils.isNotBlank(keyword)) {
             keyword = new StringBuilder().append("%").append(keyword).append("%").toString();
         }

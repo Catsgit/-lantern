@@ -165,4 +165,12 @@
     from Cart
     WHERE user_id = #{userId}
   </select>
+  
+  <select id="selectCheckedCartByUserId" parameterType="string" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM Cart
+    WHERE user_id = #{userId}
+    and checked = true
+  </select>
 </mapper>

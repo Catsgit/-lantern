@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lantern.dao.OrderMapper">
-  <resultMap id="BaseResultMap" type="com.lantern.pojo.Order">
+<mapper namespace="com.lantern.dao.OrderMasterMapper">
+  <resultMap id="BaseResultMap" type="com.lantern.pojo.OrderMaster">
     <constructor>
       <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="order_no" javaType="java.lang.Long" jdbcType="BIGINT" />
@@ -26,15 +26,15 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from Order
+    from Order_Master
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from Order
+    delete from Order_Master
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.lantern.pojo.Order">
-    insert into Order (id, order_no, user_id, 
+  <insert id="insert" parameterType="com.lantern.pojo.OrderMaster">
+    insert into Order_Master (id, order_no, user_id,
       shipping_id, payment, payment_type, 
       postage, status, payment_time, 
       send_time, end_time, close_time, 
@@ -45,8 +45,8 @@
       #{sendTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{closeTime,jdbcType=TIMESTAMP}, 
       now(), now())
   </insert>
-  <insert id="insertSelective" parameterType="com.lantern.pojo.Order">
-    insert into Order
+  <insert id="insertSelective" parameterType="com.lantern.pojo.OrderMaster">
+    insert into Order_Master
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -136,8 +136,8 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.lantern.pojo.Order">
-    update Order
+  <update id="updateByPrimaryKeySelective" parameterType="com.lantern.pojo.OrderMaster">
+    update Order_Master
     <set>
       <if test="orderNo != null">
         order_no = #{orderNo,jdbcType=BIGINT},
@@ -181,8 +181,8 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.lantern.pojo.Order">
-    update Order
+  <update id="updateByPrimaryKey" parameterType="com.lantern.pojo.OrderMaster">
+    update Order_Master
     set order_no = #{orderNo,jdbcType=BIGINT},
       user_id = #{userId,jdbcType=CHAR},
       shipping_id = #{shippingId,jdbcType=INTEGER},
@@ -198,4 +198,30 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectByUserIdAndOrderNo" resultMap="BaseResultMap" parameterType="map">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM Order_Master
+    WHERE order_no = #{orderNo}
+    and user_id = #{userId}
+  </select>
+  <select id="selectByOrderNo" resultMap="BaseResultMap" parameterType="long">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM Order_Master
+    WHERE order_no = #{orderNo}
+  </select>
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="string">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM Order_Master
+    WHERE user_id = #{userId}
+    order by create_time desc
+  </select>
+  <select id="selectAllOrder" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM Order_Master
+    order by create_time desc
+  </select>
 </mapper>
