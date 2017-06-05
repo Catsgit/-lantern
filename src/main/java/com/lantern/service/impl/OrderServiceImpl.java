@@ -462,7 +462,6 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public ServerResponse aliCallback(Map<String, String> params) {
-        System.out.println("here1");
         Long orderNo = Long.parseLong(params.get("out_trade_no"));
         String tradeNo = params.get("trade_no");
         String tradeStatus = params.get("trade_status");
@@ -470,18 +469,18 @@ public class OrderServiceImpl implements IOrderService {
         if(orderMaster == null) {
             return ServerResponse.createByErrorMessage("非lantern商城的订单, 回调忽略");
         }
-        System.out.println("here2");
         if(orderMaster.getStatus() >= Const.OrderStatusEnum.PAID.getCode()) {
             return ServerResponse.createBySuccess("支付宝重复调用");
         }
-        System.out.println("here3");
         if(Const.AlipayCallback.TRADE_STATUS_TRADE_SUCCESS.equals(tradeStatus)) {
             orderMaster.setPaymentTime(DateTimeUtil.strToDate(params.get("gmt_payment")));
             orderMaster.setStatus(Const.OrderStatusEnum.PAID.getCode());
             orderMasterMapper.updateByPrimaryKeySelective(orderMaster);
+        } else if(Const.AlipayCallback.TRADE_CLOSED.equals(tradeStatus)) {
+            cancelOrder(orderMaster.getUserId(), orderMaster.getOrderNo());
+            return ServerResponse.createByErrorMessage("未付款交易支付超时, 取消订单");
         }
 
-        System.out.println("here4");
         PayInfo payInfo = new PayInfo();
         payInfo.setUserId(orderMaster.getUserId());
         payInfo.setOrderNo(orderMaster.getOrderNo());
@@ -502,9 +501,9 @@ public class OrderServiceImpl implements IOrderService {
         }
 
         if(orderMaster.getStatus() >= Const.OrderStatusEnum.PAID.getCode()) {
-            return ServerResponse.createBySuccess();    //已付款
+            return ServerResponse.createBySuccess(true);    //已付款
         }
-        return ServerResponse.createByError();      //未付款
+        return ServerResponse.createBySuccess(false);      //未付款
     }
 
     //backend

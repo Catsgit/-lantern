@@ -179,33 +179,4 @@ public class CartServiceImpl implements ICartService {
         return cartMapper.selectCartProductCheckedStatusByUserId(userId) == 0?true:false;
     }
 
-    /*
-    private CartProductVO assembleCartProductVO(Cart cart) {
-        CartProductVO cartProductVO = new CartProductVO();
-        cartProductVO.setId(cart.getId());
-        cartProductVO.setUserId(cart.getUserId());
-        cartProductVO.setProductId(cart.getProductId());
-
-        Product product = productMapper.selectByPrimaryKey(cart.getProductId());
-        if(product != null) {
-            cartProductVO.setProductName(product.getName());
-            cartProductVO.setProductSubtitle(product.getSubtitle());
-            cartProductVO.setProductMainImage(product.getMainImage());
-            cartProductVO.setProductPrice(product.getPrice());
-            cartProductVO.setProductStatus(product.getStatus());
-            cartProductVO.setProductStock(product.getStock());
-            //判断库存
-            int buyLimitCount = 0;
-            if(product.getStock() >= cart.getQuantity()) {
-                cartProductVO.setLimitQuantity(Const.Cart.LIMIT_NUM_SUCCESS);
-            } else {
-                //超出库存
-                buyLimitCount = product.getStock();
-                cartProductVO.setLimitQuantity(Const.Cart.LIMIT_NUM_FAIL);
-                //购物车中更新有效产品数量
-            }
-        }
-    }
-    */
-
 }
